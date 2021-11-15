@@ -71,8 +71,7 @@ class Game
         new_player.input_letter
         if hangman_board.secret_word.any?(new_player.player_input)
           puts "Correct! #{new_player.player_input} is present"
-          hangman_board.display_string[hangman_board.secret_word.index(new_player.player_input)] =
-            new_player.player_input
+          update_display_string
         else
           puts "Incorrect. #{new_player.player_input} is not present"
           @guesses += 1
@@ -89,6 +88,14 @@ class Game
 
   def you_lose
     puts "You LOSE! The word was #{hangman_board.secret_word.join('')}"
+  end
+
+  def update_display_string
+    hangman_board.secret_word.each_with_index do |element, index|
+      if element == new_player.player_input
+        hangman_board.display_string[index] = new_player.player_input
+      end
+    end
   end
 end
 

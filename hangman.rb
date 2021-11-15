@@ -55,6 +55,8 @@ class Game
     @new_player = Player.new(player_name)
     @hangman_board = Board.new
     @guesses = 0
+    puts "You have #{10- @guesses} guesses to get the word"
+    puts hangman_board.display_string
   end
 
   def play_game
@@ -69,21 +71,23 @@ class Game
         new_player.input_letter
         if hangman_board.secret_word.any?(new_player.player_input)
           puts "Correct! #{new_player.player_input} is present"
+          hangman_board.display_string[hangman_board.secret_word.index(new_player.player_input)] = new_player.player_input
         else
           puts "Incorrect. #{new_player.player_input} is not present"
           @guesses += 1
-          puts "You have #{10 - @guesses} guesses left"
         end
+        puts "You have #{10 - @guesses} guesses left"
+        puts hangman_board.display_string
       end
     end
   end
 
   def you_win
-    puts "YOU WIN the word was #{hangman_board.secret_word}"
+    puts "YOU WIN the word was #{hangman_board.secret_word.join('')}"
   end
 
   def you_lose
-    puts "You LOSE! The word was #{hangman_board.secret_word}"
+    puts "You LOSE! The word was #{hangman_board.secret_word.join('')}"
   end
 end
 

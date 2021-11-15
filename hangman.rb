@@ -5,30 +5,32 @@
 class Board
   @@dictionary = File.read('5desk.txt').split("\r\n")
   
-  attr_accessor :secret_word
+  attr_accessor :secret_word, :correct_letters, :incorrect_letters, :display_string
   
   def initialize
     @secret_word = @@dictionary[rand(@@dictionary.length)].upcase.split('')
     @correct_letters = []
     @incorrect_letters = []
+    @display_string = Array.new(@secret_word.length, '_').join(' ')
     
     puts "The secret word is #{@secret_word.length} letters long."
   end
 end
 
 class Player
-  attr_accessor :name, :guessed_letters
+  attr_accessor :name, :guessed_letters, :player_input
 
   def initialize(name)
     @name = name
     @guessed_letters = []
+    @player_input = ''
     
     puts "Welcome #{@name}."
   end
 
   def input_letter
     loop do
-      letter = gets.chomp.upper
+      letter = gets.chomp.upcase
       if letter !~ /[A-Z]/
         puts 'Please enter a LETTER'
       elsif letter.length > 1
@@ -36,21 +38,55 @@ class Player
       elsif guessed_letters.any?(letter)
         puts 'You have already guessed this letter.'
       else
+        @guessed_letters << letter
+        @player_input = letter
         break
       end
     end
-    @guessed_letters << letter
-    return letter
   end
 end
 
 class Game
+  attr_accessor :new_player, :hangman_board
+
   def initialize
     puts 'Welcome to hangman! Please enter your name.'
     player_name = gets.chomp.to_s
-    Player.new('Patrick')
-    Board.new
+    @new_player = Player.new(player_name)
+    @hangman_board = Board.new
+    @guesses = 0
+  end
+
+  def play_game
+    loop do
+      if new_player.guessed_letters.sort == hangman_board.secret_word.sort
+        you_win
+        break
+      elsif @guesses == 10
+        you_lose
+        break
+      else
+        new_player.input_letter
+        if hangman_board.secret_word.any?(new_player.player_input)
+          puts "Correct! #{new_player.player_input} is present"
+        else
+          puts "Incorrect. #{new_player.player_input} is not present"
+          @guesses += 1
+          puts "You have #{10 - @guesses} guesses left"
+        end
+      end
+    end
+  end
+
+  def you_win
+    puts "YOU WIN the word was #{hangman_board.secret_word}"
+  end
+
+  def you_lose
+    puts "You LOSE! The word was #{hangman_board.secret_word}"
   end
 end
 
-Game.new
+new_game = Game.new
+new_game.play_game
+

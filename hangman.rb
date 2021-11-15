@@ -1,7 +1,3 @@
-# need "board" class (guess count, correct letters, incorrect letters)
-# player class
-# game runner class
-
 class Board
   @@dictionary = File.read('5desk.txt').split("\r\n")
 
@@ -11,7 +7,7 @@ class Board
     @secret_word = @@dictionary[rand(@@dictionary.length)].upcase.split('')
     @correct_letters = []
     @incorrect_letters = []
-    @display_string = Array.new(@secret_word.length, '_').join(' ')
+    @display_string = Array.new(@secret_word.length, '_')
 
     puts "The secret word is #{@secret_word.length} letters long."
   end
@@ -56,12 +52,12 @@ class Game
     @hangman_board = Board.new
     @guesses = 0
     puts "You have #{10 - @guesses} guesses to get the word"
-    puts hangman_board.display_string
+    puts hangman_board.display_string.join(' ')
   end
 
   def play_game
     loop do
-      if new_player.guessed_letters.sort == hangman_board.secret_word.sort
+      if hangman_board.display_string.join('') == hangman_board.secret_word.join('')
         you_win
         break
       elsif @guesses == 10
@@ -77,7 +73,7 @@ class Game
           @guesses += 1
         end
         puts "You have #{10 - @guesses} guesses left"
-        puts hangman_board.display_string
+        puts hangman_board.display_string.join(' ')
       end
     end
   end

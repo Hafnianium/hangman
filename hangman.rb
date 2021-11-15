@@ -4,15 +4,15 @@
 
 class Board
   @@dictionary = File.read('5desk.txt').split("\r\n")
-  
+
   attr_accessor :secret_word, :correct_letters, :incorrect_letters, :display_string
-  
+
   def initialize
     @secret_word = @@dictionary[rand(@@dictionary.length)].upcase.split('')
     @correct_letters = []
     @incorrect_letters = []
     @display_string = Array.new(@secret_word.length, '_').join(' ')
-    
+
     puts "The secret word is #{@secret_word.length} letters long."
   end
 end
@@ -24,7 +24,7 @@ class Player
     @name = name
     @guessed_letters = []
     @player_input = ''
-    
+
     puts "Welcome #{@name}."
   end
 
@@ -55,7 +55,7 @@ class Game
     @new_player = Player.new(player_name)
     @hangman_board = Board.new
     @guesses = 0
-    puts "You have #{10- @guesses} guesses to get the word"
+    puts "You have #{10 - @guesses} guesses to get the word"
     puts hangman_board.display_string
   end
 
@@ -71,7 +71,8 @@ class Game
         new_player.input_letter
         if hangman_board.secret_word.any?(new_player.player_input)
           puts "Correct! #{new_player.player_input} is present"
-          hangman_board.display_string[hangman_board.secret_word.index(new_player.player_input)] = new_player.player_input
+          hangman_board.display_string[hangman_board.secret_word.index(new_player.player_input)] =
+            new_player.player_input
         else
           puts "Incorrect. #{new_player.player_input} is not present"
           @guesses += 1
@@ -93,4 +94,3 @@ end
 
 new_game = Game.new
 new_game.play_game
-

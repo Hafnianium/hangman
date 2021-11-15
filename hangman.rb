@@ -53,6 +53,7 @@ class Game
     @guesses = 0
     puts "You have #{10 - @guesses} guesses to get the word"
     puts hangman_board.display_string.join(' ')
+    puts "\n"
   end
 
   def play_game
@@ -74,6 +75,7 @@ class Game
         end
         puts "You have #{10 - @guesses} guesses left"
         puts hangman_board.display_string.join(' ')
+        puts "\n"
       end
     end
   end
@@ -88,9 +90,7 @@ class Game
 
   def update_display_string
     hangman_board.secret_word.each_with_index do |element, index|
-      if element == new_player.player_input
-        hangman_board.display_string[index] = new_player.player_input
-      end
+      hangman_board.display_string[index] = new_player.player_input if element == new_player.player_input
     end
   end
 end

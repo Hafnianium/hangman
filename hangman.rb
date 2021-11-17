@@ -23,19 +23,31 @@ class Board
   end
 end
 
+# takes player name and inputs guesses
+class Player
+  attr_reader :name
+
+  def initialize
+    puts 'Please enter your name.'
+    @name = gets.chomp
+  end
+end
+
 # instantiates the classes and starts the game
 class GameRunner
-  attr_reader :secretword, :board
+  attr_reader :secretword, :board, :player
 
   def initialize
     @secretword = SecretWord.new
     @board = Board.new(secretword)
+    @player = Player.new
+    welcome_screen
   end
 
   def welcome_screen
-    puts "Welcome to hangman! The secret word is #{secretword.secret_word.length} letters long."
+    puts "Welcome to hangman #{player.name}! The secret word is #{secretword.secret_word.length} letters long."
     board.display_string
   end
 end
 
-GameRunner.new.welcome_screen
+GameRunner.new

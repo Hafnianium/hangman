@@ -1,13 +1,19 @@
+# frozen_string_literal: true
+
+# generates a secret word
 class SecretWord
   attr_reader :secret_word
+
   def initialize
     @dictionary = File.read('5desk.txt').split("\r\n")
     @secret_word = @dictionary[rand(@dictionary.length)].upcase
   end
 end
 
+# generates the underscores that slowly reveal the word
 class Board
   attr_reader :secretword
+
   def initialize(secretword)
     @secretword = secretword
   end
@@ -17,8 +23,10 @@ class Board
   end
 end
 
+# instantiates the classes and starts the game
 class GameRunner
   attr_reader :secretword, :board
+
   def initialize
     @secretword = SecretWord.new
     @board = Board.new(secretword)

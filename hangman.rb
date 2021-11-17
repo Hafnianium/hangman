@@ -8,9 +8,8 @@ end
 
 class Board
   attr_reader :secretword
-  def initialize(secretword:)
+  def initialize(secretword)
     @secretword = secretword
-    puts "Welcome to hangman! The secret word is #{secretword.secret_word.length} letters long."
   end
 
   def display_string
@@ -18,4 +17,17 @@ class Board
   end
 end
 
-Board.new(:secretword => SecretWord.new).display_string
+class GameRunner
+  attr_reader :secretword, :board
+  def initialize
+    @secretword = SecretWord.new
+    @board = Board.new(secretword)
+  end
+
+  def welcome_screen
+    puts "Welcome to hangman! The secret word is #{secretword.secret_word.length} letters long."
+    board.display_string
+  end
+end
+
+GameRunner.new.welcome_screen

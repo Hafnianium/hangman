@@ -1,7 +1,20 @@
+module SerializeObject
+  require 'yaml'
+
+  def self.deserialize(yaml_string)
+    YAML::load(yaml_string)
+  end
+
+  def serialize
+    YAML::dump(self)
+  end
+end
+
 class Board
+  include SerializeObject
   @@dictionary = File.read('5desk.txt').split("\r\n")
 
-  attr_accessor :secret_word, :correct_letters, :incorrect_letters, :display_string
+  attr_accessor :secret_word, :correct_letters, :incorrect_letters, :display_string, :hangman_board, :new_game, :new_player
 
   def initialize
     @secret_word = @@dictionary[rand(@@dictionary.length)].upcase.split('')
@@ -11,10 +24,12 @@ class Board
 
     puts "The secret word is #{@secret_word.length} letters long."
   end
+
 end
 
 class Player
-  attr_accessor :name, :guessed_letters, :player_input
+  include SerializeObject
+  attr_accessor :name, :guessed_letters, :player_input, :new_game, :new_player, :hangman_board
 
   def initialize(name)
     @name = name
@@ -27,7 +42,10 @@ class Player
   def input_letter
     loop do
       letter = gets.chomp.upcase
-      if letter !~ /[A-Z]/
+      if letter == 'SAVE'
+        save_game
+        puts 'saving'
+      elsif letter !~ /[A-Z]/
         puts 'Please enter a LETTER'
       elsif letter.length > 1
         puts 'Please enter ONE letter'
@@ -40,10 +58,16 @@ class Player
       end
     end
   end
+
+  def save_game
+    File.open("hangman_save.txt", "w"){|file| file.puts hangman_board.serialize, new_player.serialize, new_game.serialize}
+    puts 'Game saved'
+  end
 end
 
 class Game
-  attr_accessor :new_player, :hangman_board
+  include SerializeObject
+  attr_accessor :new_player, :hangman_board, :new_game
 
   def initialize
     puts 'Welcome to hangman! Please enter your name.'

@@ -29,41 +29,19 @@ end
 # takes player name and inputs guesses
 class Player
   attr_reader :name
-  attr_accessor :player_input, :guessed_letters
+  attr_accessor :guessed_letters
 
   def initialize
     puts 'Please enter your name.'
     @name = gets.chomp
     @guessed_letters = []
   end
-
-  def input_letter
-    puts 'Plase enter a letter'
-    @i = 0
-    while @i < 1
-      @player_input = gets.chomp.upcase
-      input_validation
-    end
-  end
-
-  def input_validation
-    if player_input !~ /[A-Z]/
-      puts 'Please enter a LETTER.'
-    elsif player_input.length > 1
-      puts 'Please enter ONE letter.'
-    elsif guessed_letters.any?(player_input)
-      puts 'You have already guessed this letter.'
-    else
-      guessed_letters << player_input
-      @i += 1
-    end
-  end
 end
 
 # instantiates the classes and starts the game
 class GameRunner
   attr_reader :secretword, :board, :player
-  attr_accessor :guesses
+  attr_accessor :guesses, :player_input
 
   def initialize
     @secretword = SecretWord.new
@@ -96,10 +74,32 @@ You have #{10 - guesses} guesses to get the word."
   end
 
   def play_round
-    player.input_letter
+    input_letter
     guess_check
     update_display_string
     board.display_string
+  end
+
+  def input_letter
+    puts 'Please enter a letter'
+    @i = 0
+    while @i < 1
+      @player_input = gets.chomp.upcase
+      input_validation
+    end
+  end
+
+  def input_validation
+    if player_input !~ /[A-Z]/
+      puts 'Please enter a LETTER.'
+    elsif player_input.length > 1
+      puts 'Please enter ONE letter.'
+    elsif player.guessed_letters.any?(player_input)
+      puts 'You have already guessed this letter.'
+    else
+      player.guessed_letters << player_input
+      @i += 1
+    end
   end
 
   def play_game

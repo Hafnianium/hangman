@@ -81,7 +81,7 @@ You have #{10 - guesses} guesses to get the word."
   end
 
   def input_letter
-    puts 'Please enter a letter'
+    puts 'Please enter a letter.'
     @i = 0
     while @i < 1
       @player_input = gets.chomp.upcase

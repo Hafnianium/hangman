@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'yaml'
+
 # generates a secret word
 class SecretWord
   attr_reader :secret_word
@@ -123,6 +125,12 @@ You have #{10 - guesses} guesses to get the word."
     puts 'Saving game.'
     @game_saved = 'Yes'
     @x += 1
+    File.open('hangman_save.txt', 'w'){ |file| file.puts serialize_object }
+    puts 'Game saved.'
+  end
+
+  def serialize_object
+    YAML::dump(self)
   end
 end
 

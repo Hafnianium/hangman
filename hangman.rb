@@ -41,7 +41,7 @@ class Player
 end
 
 # instantiates the classes and starts the game
-class GameRunner
+class Game
   attr_reader :secretword, :board, :player
   attr_accessor :guesses, :player_input, :game_saved
 
@@ -108,8 +108,10 @@ You have #{10 - guesses} guesses to get the word."
     while @x < 1
       if @guesses == 10
         puts "You lose! The secret word was #{secretword.secret_word}."
+        break
       elsif board.secret_word_array == board.secret_word_display_array
         puts "You win! The secret word was #{secretword.secret_word}"
+        break
       else
         input_letter
         if game_saved == 'No'
@@ -125,13 +127,34 @@ You have #{10 - guesses} guesses to get the word."
     puts 'Saving game.'
     @game_saved = 'Yes'
     @x += 1
-    File.open('hangman_save.txt', 'w'){ |file| file.puts serialize_object }
+    File.open('hangman_save.yml', 'w'){ |file| file.puts serialize_object }
     puts 'Game saved.'
   end
 
   def serialize_object
     YAML::dump(self)
   end
+
+  def self.deserialize(yaml_string)
+    YAML::load(yaml_string)
+  end
 end
 
-GameRunner.new
+puts 'Welcome to hangman! Is this a new game or are you loading a previous save?'
+response = gets.chomp
+loop do
+  if response == 'new game'
+    Game.new
+    break
+  elsif response == 'load'
+    file = File.open('hangman_save.yml', 'r')
+    contents = file.read
+    game = YAML::load(contents)
+    game.board.display_string
+    game.play_game
+    break
+  else
+    puts 'did not understand.'
+  end
+end
+

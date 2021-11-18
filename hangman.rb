@@ -158,3 +158,4 @@ loop do
   end
 end
 
+# TODO refactor Game object with default arguments so that can load in the object with yaml string.

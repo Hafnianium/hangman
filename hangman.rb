@@ -26,7 +26,7 @@ class Board
   end
 end
 
-# takes player name and inputs guesses
+# takes player name and stores guesses
 class Player
   attr_reader :name
   attr_accessor :guessed_letters
@@ -41,13 +41,14 @@ end
 # instantiates the classes and starts the game
 class GameRunner
   attr_reader :secretword, :board, :player
-  attr_accessor :guesses, :player_input
+  attr_accessor :guesses, :player_input, :game_saved
 
   def initialize
     @secretword = SecretWord.new
     @board = Board.new(secretword)
     @player = Player.new
     @guesses = 0
+    @game_saved = 'No'
     welcome_screen
     play_game
   end
@@ -73,19 +74,17 @@ You have #{10 - guesses} guesses to get the word."
     end
   end
 
-  def play_round
-    input_letter
-    guess_check
-    update_display_string
-    board.display_string
-  end
-
   def input_letter
     puts 'Please enter a letter.'
     @i = 0
     while @i < 1
       @player_input = gets.chomp.upcase
-      input_validation
+      if player_input == 'SAVE'
+        save_game
+        break
+      else
+        input_validation
+      end
     end
   end
 
@@ -103,17 +102,27 @@ You have #{10 - guesses} guesses to get the word."
   end
 
   def play_game
-    loop do
-      if board.secret_word_array == board.secret_word_display_array
-        puts "You win! The secret word was #{secretword.secret_word}."
-        break
-      elsif @guesses == 10
-        puts " You lose! The secret word was #{secretword.secret_word}."
-        break
+    @x = 0
+    while @x < 1
+      if @guesses == 10
+        puts "You lose! The secret word was #{secretword.secret_word}."
+      elsif board.secret_word_array == board.secret_word_display_array
+        puts "You win! The secret word was #{secretword.secret_word}"
       else
-        play_round
+        input_letter
+        if game_saved == 'No'
+          guess_check
+          update_display_string
+          board.display_string
+        end
       end
     end
+  end
+
+  def save_game
+    puts 'Saving game.'
+    @game_saved = 'Yes'
+    @x += 1
   end
 end
 

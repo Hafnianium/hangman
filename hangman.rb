@@ -95,12 +95,24 @@ You have #{10 - guesses} guesses to get the word."
     end
   end
 
+  def play_round
+    player.input_letter
+    guess_check
+    update_display_string
+    board.display_string
+  end
+
   def play_game
     loop do
-      player.input_letter
-      guess_check
-      update_display_string
-      board.display_string
+      if board.secret_word_array == board.secret_word_display_array
+        puts "You win! The secret word was #{secretword.secret_word}."
+        break
+      elsif @guesses == 10
+        puts " You lose! The secret word was #{secretword.secret_word}."
+        break
+      else
+        play_round
+      end
     end
   end
 end

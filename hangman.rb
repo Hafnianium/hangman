@@ -26,10 +26,34 @@ end
 # takes player name and inputs guesses
 class Player
   attr_reader :name
+  attr_accessor :player_input, :guessed_letters
 
   def initialize
     puts 'Please enter your name.'
     @name = gets.chomp
+    @guessed_letters = []
+  end
+
+  def input_letter
+    puts 'Plase enter a letter'
+    @i = 0
+    while @i < 1
+      @player_input = gets.chomp.upcase
+      input_validation
+    end
+  end
+
+  def input_validation
+    if player_input !~ /[A-Z]/
+      puts 'Please enter a LETTER.'
+    elsif player_input.length > 1
+      puts 'Please enter ONE letter.'
+    elsif guessed_letters.any?(player_input)
+      puts 'You have already guessed this letter.'
+    else
+      guessed_letters << player_input
+      @i += 1
+    end
   end
 end
 
@@ -42,6 +66,7 @@ class GameRunner
     @board = Board.new(secretword)
     @player = Player.new
     welcome_screen
+    player.input_letter
   end
 
   def welcome_screen
